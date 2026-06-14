@@ -9,10 +9,10 @@
       Atur USE_LOCAL = false, lalu sesuaikan nama GitHub 'owner', 'repo', dan 'branch' Anda.
 --]]
 
-local USE_LOCAL = true -- Ganti ke false jika ingin memanggil langsung dari repo GitHub Anda
+local USE_LOCAL = false -- Ganti ke false jika ingin memanggil langsung dari repo GitHub Anda
 
-local owner = "YOUR_GITHUB_USERNAME"
-local repo = "YOUR_REPO_NAME"
+local owner = "YaserAp"
+local repo = "RBX"
 local branch = "main"
 
 -- ----------------------------------------------------
