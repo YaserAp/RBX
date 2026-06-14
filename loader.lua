@@ -102,11 +102,11 @@ end
 -- LOAD ORDER WITH TRY-CATCH PCALL
 -- ----------------------------------------------------
 local initSuccess, initError = pcall(function()
-    loadModule("src/config.lua")
-    loadModule("src/utils.lua")
-    loadModule("src/features.lua")
-    loadModule("src/ui.lua")
-    loadModule("src/main.lua")
+    loadModule("v2/config.lua")
+    loadModule("v2/utils.lua")
+    loadModule("v2/features.lua")
+    loadModule("v2/ui.lua")
+    loadModule("v2/main.lua")
 end)
 
 -- ----------------------------------------------------

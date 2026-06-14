@@ -18,11 +18,11 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 | Nama File / Jalur | Jenis | Peran / Deskripsi |
 | :--- | :--- | :--- |
 | **`loader.lua`** | Skrip Peluncur | Skrip masuk utama yang dijalankan di Delta Executor. Mendukung testing lokal (`USE_LOCAL = true`) via `readfile` dan mode produksi (`USE_LOCAL = false`) via raw GitHub. |
-| `src/config.lua` | Konfigurasi | Menyimpan status aktif fitur auto-farm dan modifikasi player (`shared.SpeedHubX.Config`). |
-| `src/utils.lua` | Utility | Utilitas interaksi ProximityPrompt/ClickDetector, deteksi plot, serta helper UICorner/UIStroke. |
-| `src/features.lua` | Fitur Loop | Menjalankan seluruh proses latar belakang (Auto Plant, Harvest, Sell, Water, Buy, Spray, AFK, dan Player Mods). |
-| `src/ui.lua` | UI Library | Library UI offline Cyberpunk yang mobile-friendly (tombol melayang kustom, Activated events). |
-| `src/main.lua` | Main Render | Inisialisasi tab GUI, penambahan toggle/slider/dropdown, dan penghubung aksi ke modul konfigurasi. |
+| `v2/config.lua` | Konfigurasi | Menyimpan status aktif fitur auto-farm dan modifikasi player (`shared.SpeedHubX.Config`). |
+| `v2/utils.lua` | Utility | Utilitas interaksi ProximityPrompt/ClickDetector, deteksi plot, serta helper UICorner/UIStroke. |
+| `v2/features.lua` | Fitur Loop | Menjalankan seluruh proses latar belakang (Auto Plant, Harvest, Sell, Water, Buy, Spray, AFK, dan Player Mods). |
+| `v2/ui.lua` | UI Library | Library UI offline Cyberpunk yang mobile-friendly (tombol melayang kustom, Activated events). |
+| `v2/main.lua` | Main Render | Inisialisasi tab GUI, penambahan toggle/slider/dropdown, dan penghubung aksi ke modul konfigurasi. |
 
 ### Alat Pendukung & Cadangan
 | Nama File / Jalur | Jenis | Peran / Deskripsi |
