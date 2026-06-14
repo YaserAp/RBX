@@ -17,10 +17,29 @@ function Utils.getPlayerPlot()
     local farmFolder = workspace:FindFirstChild("Farm") or workspace:FindFirstChild("Farms")
     if farmFolder then
         for _, plot in ipairs(farmFolder:GetChildren()) do
+            -- 1. Cek nama plot
+            if plot.Name == LocalPlayer.Name then
+                return plot
+            end
+            
+            -- 2. Cek Owner secara rekursif
+            local ownerObj = plot:FindFirstChild("Owner", true)
+            if ownerObj then
+                if ownerObj.Value == LocalPlayer.Name or ownerObj.Value == LocalPlayer then
+                    return plot
+                end
+            end
+            
+            -- 3. Cek struktur asli
             local important = plot:FindFirstChild("Important")
             local data = important and important:FindFirstChild("Data")
             local owner = data and data:FindFirstChild("Owner")
             if owner and (owner.Value == LocalPlayer.Name or owner.Value == LocalPlayer) then
+                return plot
+            end
+            
+            -- 4. Cek atribut
+            if plot:GetAttribute("Owner") == LocalPlayer.Name or plot:GetAttribute("Owner") == LocalPlayer or plot:GetAttribute("OwnerId") == LocalPlayer.UserId then
                 return plot
             end
         end
