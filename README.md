@@ -51,7 +51,7 @@ Repositori ini menggunakan struktur kode modular `v2` agar pemeliharaan kode leb
 *   [`v2/config.lua`](v2/config.lua) — Penyimpanan konfigurasi state fitur.
 *   [`v2/utils.lua`](v2/utils.lua) — Fungsi pembantu (Plot finder, network fire, dll).
 *   [`v2/features.lua`](v2/features.lua) — Loop background pengerjaan fitur otomatis.
-*   [`v2/ui.lua`](v2/ui.lua) — Library UI bertema Cyberpunk Dark-Neon.
+*   [`v2/ui.lua`](v2/ui.lua) — Library UI Wrapper untuk Fluent UI (dawid-scripts) yang modern dan premium.
 *   [`v2/main.lua`](v2/main.lua) — Inisialisasi tab UI dan callback aksi.
 
 ---

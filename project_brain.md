@@ -8,11 +8,13 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 *   **Target Game:** Roblox - *Grow a Garden 2*
 *   **Target Executor:** **Delta Executor** (Mobile / Emulator Android)
 *   **Tujuan Utama:** Membuat skrip otomatisasi pertanian (Auto-Plant, Auto-Harvest, Auto-Sell, Auto-Water, Auto-Spray) yang interaktif melalui panel GUI.
-*   **Status Terbaru:** Skrip telah diperbarui ke **v2.5 Modular Offline UI** dengan peningkatan performa dan UI:
+*   **Status Terbaru:** Skrip telah diperbarui ke **v2.6 Modular Fluent UI** dengan peningkatan performa, perbaikan bug, dan UI:
     1. **Renominalisasi:** Fitur *Auto Sell* diganti namanya menjadi *Auto sell all (semua buah d inventory)* agar lebih akurat merefleksikan fungsinya.
     2. **Antarmuka Toko Benih Baru:** Menghapus dropdown pemilihan benih yang membingungkan dan menggantinya dengan sakelar (toggle) individu untuk masing-masing dari 27 jenis benih game di bawah sakelar *Auto Beli Benih (Global)*. Hal ini memudahkan pemilihan banyak jenis benih sekaligus (multi-select).
     3. **Peningkatan Deteksi Penanaman:** Menambahkan pencarian berlapis untuk tool benih di tas (polos, dengan akhiran ` Seed`, atau `Seed`) serta mengirimkan nama tool persis hasil deteksi ke event jaringan `PlantSeed`.
     4. **Bypass Caching CDN:** Memodifikasi `loader.lua` agar menambahkan parameter cache-buster `?t=os.time()` saat mengunduh berkas modular dari `raw.githack.com` demi menjamin file yang dieksekusi selalu yang terbaru.
+    5. **Transisi ke Fluent UI:** Mengubah pustaka UI bawaan (`v2/ui.lua`) menjadi wrapper untuk Fluent UI (dawid-scripts) yang modern, premium, dan mobile-friendly.
+    6. **Perbaikan Loop Seleksi Benih:** Memperbaiki bug iterasi `ipairs` menjadi `pairs` pada `config.SelectedSeeds` (karena berupa dictionary/table hash) sehingga loop penanaman dan pembelian benih berjalan dengan benar.
 
 ---
 
@@ -25,7 +27,7 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 | `v2/config.lua` | Konfigurasi | Menyimpan status aktif fitur auto-farm dan modifikasi player (`shared.SpeedHubX.Config`). |
 | `v2/utils.lua` | Utility | Utilitas interaksi ProximityPrompt/ClickDetector, deteksi plot, serta helper UICorner/UIStroke. |
 | `v2/features.lua` | Fitur Loop | Menjalankan seluruh proses latar belakang (Auto Plant, Harvest, Sell, Water, Buy, Spray, AFK, dan Player Mods). |
-| `v2/ui.lua` | UI Library | Library UI offline Cyberpunk yang mobile-friendly (tombol melayang kustom, Activated events). |
+| `v2/ui.lua` | UI Library | Library UI wrapper untuk Fluent UI (dawid-scripts) yang modern dan premium. |
 | `v2/main.lua` | Main Render | Inisialisasi tab GUI, penambahan toggle/slider/dropdown, dan penghubung aksi ke modul konfigurasi. |
 | **`README.md`** | Dokumentasi | Panduan instalasi utama dan pemanggil loadstring repositori GitHub untuk pengguna luar. |
 
