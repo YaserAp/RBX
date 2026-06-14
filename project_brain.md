@@ -8,7 +8,7 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 *   **Target Game:** Roblox - *Grow a Garden 2*
 *   **Target Executor:** **Delta Executor** (Mobile / Emulator Android)
 *   **Tujuan Utama:** Membuat skrip otomatisasi pertanian (Auto-Plant, Auto-Harvest, Auto-Sell, Auto-Water, Auto-Spray) yang interaktif melalui panel GUI.
-*   **Status Terbaru:** Skrip telah diperbarui ke **v2.2 Modern UI offline** bertema Cyberpunk/Dark-Neon. Kami telah memperbaiki kesalahan sintaksis fatal (kata kunci `end` ekstra di dalam loop Auto Spray) yang sebelumnya mencegah kode dikompilasi oleh executor. Kami juga memperkuat stabilitas pada Delta Executor dengan menggunakan `Activated` event ganda, sistem drag sentuh kustom untuk tombol melayang agar input klik tidak terkunci di Android, serta log diagnostik darurat (fallback GUI) dan trace logging di F9. Seluruh fitur auto-farm kini 100% aktif dan terintegrasi penuh.
+*   **Status Terbaru:** Skrip telah diperbarui ke **v2.3 Modular Offline UI** dengan perbaikan bug tombol toggle (seperti *Auto Sell*) dan dropdown. Kami menghapus penanganan klik ganda (`Activated` + `MouseButton1Click` secara bersamaan) yang sebelumnya menyebabkan aksi terpicu 2x instan (sehingga toggle On kembali mati/Off dalam sekejap). Kini UI menggunakan penanganan event `Activated` tunggal yang sangat responsif dan stabil di semua platform executor mobile/PC. Stabilitas drag sentuh kustom tetap dipertahankan. Seluruh fitur auto-farm aktif dan berjalan tanpa masalah.
 
 ---
 
@@ -23,6 +23,7 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 | `v2/features.lua` | Fitur Loop | Menjalankan seluruh proses latar belakang (Auto Plant, Harvest, Sell, Water, Buy, Spray, AFK, dan Player Mods). |
 | `v2/ui.lua` | UI Library | Library UI offline Cyberpunk yang mobile-friendly (tombol melayang kustom, Activated events). |
 | `v2/main.lua` | Main Render | Inisialisasi tab GUI, penambahan toggle/slider/dropdown, dan penghubung aksi ke modul konfigurasi. |
+| **`README.md`** | Dokumentasi | Panduan instalasi utama dan pemanggil loadstring repositori GitHub untuk pengguna luar. |
 
 ### Alat Pendukung & Cadangan
 | Nama File / Jalur | Jenis | Peran / Deskripsi |
