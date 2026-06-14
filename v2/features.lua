@@ -102,28 +102,64 @@ task.spawn(function()
                 local physicalFolder = plot:FindFirstChild("Important") and plot.Important:FindFirstChild("Plants_Physical")
                 local targetFolder = physicalFolder or plot
                 
-                for _, plant in ipairs(targetFolder:GetDescendants()) do
-                    local isReady = plant:GetAttribute("ReadyToHarvest") == true or plant:GetAttribute("Progress") == 100 or plant:FindFirstChild("Fruits")
+                for _, plant in ipairs(targetFolder:GetChildren()) do
+                    local hasInteractivePrompt = false
                     
-                    if isReady then
-                        local fruitsFolder = plant:FindFirstChild("Fruits")
-                        if fruitsFolder then
-                            for _, fruit in ipairs(fruitsFolder:GetChildren()) do
-                                local fired = false
-                                if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
-                                    fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, fruit)
-                                end
-                                if not fired then
-                                    utils.triggerInteraction(fruit)
-                                end
+                    -- 1. Cari ProximityPrompt yang aktif/Enabled di dalam tanaman ini (termasuk buah-buahnya)
+                    for _, desc in ipairs(plant:GetDescendants()) do
+                        if desc:IsA("ProximityPrompt") and desc.Enabled then
+                            hasInteractivePrompt = true
+                            local harvestTarget = desc.Parent
+                            local fired = false
+                            
+                            -- Coba gunakan bypass jaringan terlebih dahulu
+                            if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
+                                fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, harvestTarget)
                             end
-                        else
+                            
+                            -- Jika bypass gagal, gunakan interaksi prompt fisik secara langsung
+                            if not fired then
+                                pcall(function() fireproximityprompt(desc) end)
+                            end
+                            
+                            task.wait(0.05)
+                        elseif desc:IsA("ClickDetector") then
+                            hasInteractivePrompt = true
+                            local harvestTarget = desc.Parent
                             local fired = false
                             if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
-                                fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, plant)
+                                fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, harvestTarget)
                             end
-                            if not fired then
-                                utils.triggerInteraction(plant)
+                            if not fired and fireclickdetector then
+                                pcall(function() fireclickdetector(desc) end)
+                            end
+                            task.wait(0.05)
+                        end
+                    end
+                    
+                    -- 2. Jika tidak ada ProximityPrompt/ClickDetector aktif, cek berdasarkan Attribute game (Fallback)
+                    if not hasInteractivePrompt then
+                        local isReady = plant:GetAttribute("ReadyToHarvest") == true or plant:GetAttribute("Progress") == 100
+                        if isReady then
+                            local fruitsFolder = plant:FindFirstChild("Fruits")
+                            if fruitsFolder then
+                                for _, fruit in ipairs(fruitsFolder:GetChildren()) do
+                                    local fired = false
+                                    if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
+                                        fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, fruit)
+                                    end
+                                    if not fired then
+                                        utils.triggerInteraction(fruit)
+                                    end
+                                end
+                            else
+                                local fired = false
+                                if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
+                                    fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, plant)
+                                end
+                                if not fired then
+                                    utils.triggerInteraction(plant)
+                                end
                             end
                         end
                     end

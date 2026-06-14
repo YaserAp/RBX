@@ -60,19 +60,50 @@ function Utils.fireNetworkEvent(eventTable, ...)
     return successCall
 end
 
--- Fungsi Fallback Interaksi Click/Prompt Fisik
+-- Fungsi Fallback Interaksi Click/Prompt Fisik (Mendukung pencarian rekursif)
 function Utils.triggerInteraction(object)
     if not object then return false end
-    local prompt = object:FindFirstChildOfClass("ProximityPrompt")
-    if prompt and fireproximityprompt then
-        pcall(function() fireproximityprompt(prompt) end)
-        return true
+    
+    -- Cari ProximityPrompt secara rekursif
+    local prompt = object:IsA("ProximityPrompt") and object
+    if not prompt then
+        prompt = object:FindFirstChildOfClass("ProximityPrompt")
     end
-    local clickDetector = object:FindFirstChildOfClass("ClickDetector")
+    if not prompt then
+        for _, desc in ipairs(object:GetDescendants()) do
+            if desc:IsA("ProximityPrompt") then
+                prompt = desc
+                break
+            end
+        end
+    end
+    
+    if prompt and fireproximityprompt then
+        if prompt.Enabled then
+            pcall(function() fireproximityprompt(prompt) end)
+            return true
+        end
+    end
+    
+    -- Cari ClickDetector secara rekursif
+    local clickDetector = object:IsA("ClickDetector") and object
+    if not clickDetector then
+        clickDetector = object:FindFirstChildOfClass("ClickDetector")
+    end
+    if not clickDetector then
+        for _, desc in ipairs(object:GetDescendants()) do
+            if desc:IsA("ClickDetector") then
+                clickDetector = desc
+                break
+            end
+        end
+    end
+    
     if clickDetector and fireclickdetector then
         pcall(function() fireclickdetector(clickDetector) end)
         return true
     end
+    
     return false
 end
 
