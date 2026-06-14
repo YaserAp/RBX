@@ -170,19 +170,50 @@ function Utils.fireNetworkEvent(eventTable, ...)
     return successCall
 end
 
--- Fungsi Fallback Interaksi Click/Prompt Fisik
+-- Fungsi Fallback Interaksi Click/Prompt Fisik (Mendukung pencarian rekursif)
 function Utils.triggerInteraction(object)
     if not object then return false end
-    local prompt = object:FindFirstChildOfClass("ProximityPrompt")
-    if prompt and fireproximityprompt then
-        pcall(function() fireproximityprompt(prompt) end)
-        return true
+    
+    -- Cari ProximityPrompt secara rekursif
+    local prompt = object:IsA("ProximityPrompt") and object
+    if not prompt then
+        prompt = object:FindFirstChildOfClass("ProximityPrompt")
     end
-    local clickDetector = object:FindFirstChildOfClass("ClickDetector")
+    if not prompt then
+        for _, desc in ipairs(object:GetDescendants()) do
+            if desc:IsA("ProximityPrompt") then
+                prompt = desc
+                break
+            end
+        end
+    end
+    
+    if prompt and fireproximityprompt then
+        if prompt.Enabled then
+            pcall(function() fireproximityprompt(prompt) end)
+            return true
+        end
+    end
+    
+    -- Cari ClickDetector secara rekursif
+    local clickDetector = object:IsA("ClickDetector") and object
+    if not clickDetector then
+        clickDetector = object:FindFirstChildOfClass("ClickDetector")
+    end
+    if not clickDetector then
+        for _, desc in ipairs(object:GetDescendants()) do
+            if desc:IsA("ClickDetector") then
+                clickDetector = desc
+                break
+            end
+        end
+    end
+    
     if clickDetector and fireclickdetector then
         pcall(function() fireclickdetector(clickDetector) end)
         return true
     end
+    
     return false
 end
 
@@ -313,6 +344,52 @@ end)
 
 -- 2. Auto Harvest Loop
 task.spawn(function()
+    -- Helper function to check if fruit/plant is ready to harvest based on prompts or attributes
+    local function isHarvestable(object, parentPlant)
+        if not object then return false end
+        
+        -- Check for enabled ProximityPrompt
+        for _, desc in ipairs(object:GetDescendants()) do
+            if desc:IsA("ProximityPrompt") and desc.Enabled then
+                return true
+            end
+        end
+        
+        -- Check for ClickDetector
+        for _, desc in ipairs(object:GetDescendants()) do
+            if desc:IsA("ClickDetector") then
+                return true
+            end
+        end
+        
+        -- Check attributes of object
+        if object:GetAttribute("ReadyToHarvest") == true or object:GetAttribute("Progress") == 100 then
+            return true
+        end
+        
+        -- Fallback to parent plant attributes
+        if parentPlant and (parentPlant:GetAttribute("ReadyToHarvest") == true or parentPlant:GetAttribute("Progress") == 100) then
+            return true
+        end
+        
+        return false
+    end
+
+    -- Helper function to harvest an object (fruit or plant model)
+    local function harvestObject(object)
+        local fired = false
+        
+        -- Try bypass using networking module with correct object (fruit/plant model)
+        if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
+            fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, object)
+        end
+        
+        -- If bypass failed, trigger interaction directly (ProximityPrompt/ClickDetector)
+        if not fired then
+            utils.triggerInteraction(object)
+        end
+    end
+
     while true do
         if config.AutoHarvest then
             local plot = utils.getPlayerPlot()
@@ -320,28 +397,22 @@ task.spawn(function()
                 local physicalFolder = plot:FindFirstChild("Important") and plot.Important:FindFirstChild("Plants_Physical")
                 local targetFolder = physicalFolder or plot
                 
-                for _, plant in ipairs(targetFolder:GetDescendants()) do
-                    local isReady = plant:GetAttribute("ReadyToHarvest") == true or plant:GetAttribute("Progress") == 100 or plant:FindFirstChild("Fruits")
-                    
-                    if isReady then
+                for _, plant in ipairs(targetFolder:GetChildren()) do
+                    if plant:IsA("Model") or plant:IsA("BasePart") then
                         local fruitsFolder = plant:FindFirstChild("Fruits")
                         if fruitsFolder then
+                            -- Case 1: Plant has a Fruits folder (e.g. Tomato, Blueberry, etc.)
                             for _, fruit in ipairs(fruitsFolder:GetChildren()) do
-                                local fired = false
-                                if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
-                                    fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, fruit)
-                                end
-                                if not fired then
-                                    utils.triggerInteraction(fruit)
+                                if isHarvestable(fruit, plant) then
+                                    harvestObject(fruit)
+                                    task.wait(0.05)
                                 end
                             end
                         else
-                            local fired = false
-                            if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
-                                fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, plant)
-                            end
-                            if not fired then
-                                utils.triggerInteraction(plant)
+                            -- Case 2: Plant itself is harvested (no Fruits folder)
+                            if isHarvestable(plant) then
+                                harvestObject(plant)
+                                task.wait(0.05)
                             end
                         end
                     end
