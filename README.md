@@ -9,11 +9,11 @@ Sebuah Script Hub modular Roblox untuk game **Grow a Garden 2** yang dirancang k
 Salin kode di bawah ini dan jalankan di executor Anda:
 
 ```lua
-loadstring(game:HttpGet("https://raw.githack.com/YaserAp/RBX/main/loader.lua?t=" .. tick()))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/YaserAp/RBX/main/loader.lua?t=" .. tick()))()
 ```
 
 > [!TIP]
-> Skrip di atas menggunakan penyedia CDN bebas cache (`githack.com`) sehingga setiap pembaruan kode yang Anda lakukan di GitHub akan langsung ter-update di game tanpa penundaan cache.
+> Skrip di atas menggunakan URL GitHub Raw dengan parameter cache-busting sehingga setiap pembaruan kode yang Anda lakukan di GitHub akan langsung ter-update di game tanpa penundaan cache.
 
 ---
 
