@@ -52,7 +52,9 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 ### C. Kompatibilitas Delta Executor (Mobile)
 *   Fungsi `game:HttpGet` di Delta Executor sering memblokir seluruh thread eksekusi jika terjadi jeda jaringan.
 *   Mengakses `game:GetService("CoreGui")` dapat menyebabkan kegagalan senyap (silent crash) di Android.
-*   **Solusi:** Skrip GUI dipasang langsung ke `LocalPlayer.PlayerGui` dan dijalankan 100% lokal tanpa request internet.
+*   **Masalah Double-Firing Klik:** Menghubungkan event `Activated` dan `MouseButton1Click` pada tombol yang sama secara bersamaan akan menyebabkan callback dipicu dua kali dalam satu kali klik pada platform/executor tertentu. Ini membatalkan aksi toggle (On -> Off instan) dan melipatgandakan callback dropdown/slider.
+*   **Solusi:** Skrip GUI dipasang langsung ke `LocalPlayer.PlayerGui` dan menggunakan event `Activated` saja untuk menangani seluruh input klik/sentuh secara eksklusif.
+
 
 ---
 
