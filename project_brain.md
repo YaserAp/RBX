@@ -8,7 +8,7 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 *   **Target Game:** Roblox - *Grow a Garden 2*
 *   **Target Executor:** **Delta Executor** (Mobile / Emulator Android)
 *   **Tujuan Utama:** Membuat skrip otomatisasi pertanian (Auto-Plant, Auto-Harvest, Auto-Sell, Auto-Water, Auto-Spray) yang interaktif melalui panel GUI.
-*   **Status Terbaru:** Skrip telah diperbarui ke **v2.7 Modular Fluent UI** dengan peningkatan performa, perbaikan bug, dan UI:
+*   **Status Terbaru:** Skrip telah diperbarui ke **v2.8 Modular Fluent UI** dengan peningkatan performa, perbaikan bug, dan UI:
     1. **Renominalisasi:** Fitur *Auto Sell* diganti namanya menjadi *Auto sell all (semua buah d inventory)* agar lebih akurat merefleksikan fungsinya.
     2. **Antarmuka Toko Benih Dropdown:** Mengganti 27 sakelar benih yang memenuhi layar dengan satu menu pilihan ganda (*multi-select dropdown*) untuk 25 jenis benih game. Benih mutasi *Gold* dan *Rainbow* juga telah dihapus dari daftar karena dibeli/ditangani lewat event.
     3. **Peningkatan Deteksi Penanaman:** Menambahkan pencarian berlapis untuk tool benih di tas (polos, dengan akhiran ` Seed`, atau `Seed`) serta mengirimkan nama tool persis hasil deteksi ke event jaringan `PlantSeed`.
@@ -16,6 +16,7 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
     5. **Transisi ke Fluent UI:** Mengubah pustaka UI bawaan (`v2/ui.lua`) menjadi wrapper untuk Fluent UI (dawid-scripts) yang modern, premium, dan mobile-friendly.
     6. **Perbaikan Loop Seleksi Benih:** Memperbaiki bug iterasi `ipairs` menjadi `pairs` pada `config.SelectedSeeds` (karena berupa dictionary/table hash) sehingga loop penanaman dan pembelian benih berjalan dengan benar.
     7. **Penyederhanaan Teks Dropdown:** Mengubah teks label dropdown pembelian benih dari `"Pilih Benih yang Ingin Dibeli & Ditanam"` menjadi `"Pilih Benih yang Ingin Dibeli"` guna menyederhanakan tampilan antarmuka.
+    8. **Perbaikan Auto Harvest & Interaksi Rekursif (v2.8):** Mengatasi kegagalan Auto Harvest dengan menerapkan pemindaian aktif `ProximityPrompt`/`ClickDetector` (status `Enabled == true`) secara hybrid, serta mengecek atribut game (`ReadyToHarvest`/`Progress`) sebagai fallback. Kami juga merevisi pencarian prompt fisik pada `v2/utils.lua` agar rekursif (`GetDescendants`), yang berhasil memecahkan masalah tombol klik yang gagal/terlewat pada model tanaman dengan prompt yang bersarang dalam part.
 
 ---
 

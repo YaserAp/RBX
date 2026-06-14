@@ -1,6 +1,6 @@
 # Speed Hub X - Grow a Garden 2 Script Hub 🚀
 
-Sebuah Script Hub modular Roblox untuk game **Grow a Garden 2** yang dirancang khusus dan dioptimalkan secara penuh untuk **Delta Executor** (Mobile Android & PC).
+Sebuah Script Hub modular Roblox untuk game **Grow a Garden 2** yang dirancang khusus dan dioptimalkan secara penuh untuk executor Mobile (seperti **Delta**) maupun PC Windows (seperti **Solara**, **Celery**, dan **Wave**).
 
 ---
 
@@ -21,7 +21,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/YaserAp/RBX/main/load
 
 ### 🌾 1. Auto Farm Tab
 *   **Auto Plant (Tanam):** Menanam benih yang dipilih secara otomatis pada plot kosong.
-*   **Auto Harvest (Panen):** Memanen buah matang secara instan menggunakan bypass jaringan internal.
+*   **Auto Harvest (Panen):** Memanen buah matang secara otomatis dengan deteksi hybrid (aktif ProximityPrompt/ClickDetector & atribut game) serta bypass jaringan internal.
 *   **Auto Water (Siram):** Menyiram tanah secara otomatis ketika kelembapan berada di bawah 80%.
 *   **Auto sell all (semua buah d inventory):** Menjual seluruh hasil panen secara otomatis ke NPC Merchant secara instan.
 
