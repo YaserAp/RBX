@@ -10,7 +10,7 @@ Dokumen ini berfungsi sebagai pusat penyimpanan riwayat proyek, detail file, pen
 *   **Tujuan Utama:** Membuat skrip otomatisasi pertanian (Auto-Plant, Auto-Harvest, Auto-Sell, Auto-Water, Auto-Spray) yang interaktif melalui panel GUI.
 *   **Status Terbaru:** Skrip telah diperbarui ke **v2.6 Modular Fluent UI** dengan peningkatan performa, perbaikan bug, dan UI:
     1. **Renominalisasi:** Fitur *Auto Sell* diganti namanya menjadi *Auto sell all (semua buah d inventory)* agar lebih akurat merefleksikan fungsinya.
-    2. **Antarmuka Toko Benih Baru:** Menghapus dropdown pemilihan benih yang membingungkan dan menggantinya dengan sakelar (toggle) individu untuk masing-masing dari 27 jenis benih game di bawah sakelar *Auto Beli Benih (Global)*. Hal ini memudahkan pemilihan banyak jenis benih sekaligus (multi-select).
+    2. **Antarmuka Toko Benih Dropdown:** Mengganti 27 sakelar benih yang memenuhi layar dengan satu menu pilihan ganda (*multi-select dropdown*) untuk 25 jenis benih game. Benih mutasi *Gold* dan *Rainbow* juga telah dihapus dari daftar karena dibeli/ditangani lewat event.
     3. **Peningkatan Deteksi Penanaman:** Menambahkan pencarian berlapis untuk tool benih di tas (polos, dengan akhiran ` Seed`, atau `Seed`) serta mengirimkan nama tool persis hasil deteksi ke event jaringan `PlantSeed`.
     4. **Bypass Caching CDN:** Memodifikasi `loader.lua` agar menggunakan `raw.githubusercontent.com` dan menambahkan parameter cache-buster `?t=os.time()` saat mengunduh berkas modular demi menjamin file yang dieksekusi selalu yang terbaru.
     5. **Transisi ke Fluent UI:** Mengubah pustaka UI bawaan (`v2/ui.lua`) menjadi wrapper untuk Fluent UI (dawid-scripts) yang modern, premium, dan mobile-friendly.
