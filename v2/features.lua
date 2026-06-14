@@ -95,84 +95,91 @@ end)
 
 -- 2. Auto Harvest Loop
 task.spawn(function()
-    -- Helper function to check if fruit/plant is ready to harvest based on prompts or attributes
-    local function isHarvestable(object, parentPlant)
-        if not object then return false end
-        
-        -- Check for enabled ProximityPrompt
-        for _, desc in ipairs(object:GetDescendants()) do
-            if desc:IsA("ProximityPrompt") and desc.Enabled then
-                return true
-            end
-        end
-        
-        -- Check for ClickDetector
-        for _, desc in ipairs(object:GetDescendants()) do
-            if desc:IsA("ClickDetector") then
-                return true
-            end
-        end
-        
-        -- Check attributes of object
-        if object:GetAttribute("ReadyToHarvest") == true or object:GetAttribute("Progress") == 100 then
-            return true
-        end
-        
-        -- Fallback to parent plant attributes
-        if parentPlant and (parentPlant:GetAttribute("ReadyToHarvest") == true or parentPlant:GetAttribute("Progress") == 100) then
-            return true
-        end
-        
-        return false
-    end
-
-    -- Helper function to harvest an object (fruit or plant model)
-    local function harvestObject(object)
-        -- Prioritize physical interaction (ProximityPrompt/ClickDetector) first,
-        -- since it is 100% reliable and mimics real user input.
-        local fired = utils.triggerInteraction(object)
-        
-        -- If physical interaction is not available/failed, fallback to network event bypass
-        if not fired then
-            if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
-                utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, object)
-            end
-        end
-    end
-
     while true do
         if config.AutoHarvest then
             local plot = utils.getPlayerPlot()
             if plot then
-                local physicalFolder = plot:FindFirstChild("Important") and plot.Important:FindFirstChild("Plants_Physical")
-                if not physicalFolder then
-                    physicalFolder = plot:FindFirstChild("Plants_Physical", true) or plot:FindFirstChild("Plants", true)
-                end
-                local targetFolder = physicalFolder or plot
-                
-                for _, plant in ipairs(targetFolder:GetChildren()) do
-                    if plant:IsA("Model") or plant:IsA("BasePart") then
-                        local fruitsFolder = plant:FindFirstChild("Fruits")
-                        if fruitsFolder then
-                            -- Case 1: Plant has a Fruits folder (e.g. Tomato, Blueberry, etc.)
-                            for _, fruit in ipairs(fruitsFolder:GetChildren()) do
-                                if isHarvestable(fruit, plant) then
-                                    harvestObject(fruit)
-                                    task.wait(0.05)
-                                end
+                -- 1. Scan and trigger ProximityPrompts recursively (Bulletproof & Instant)
+                for _, desc in ipairs(plot:GetDescendants()) do
+                    if desc:IsA("ProximityPrompt") and desc.Enabled then
+                        local actionText = tostring(desc.ActionText):lower()
+                        local parent = desc.Parent
+                        local isHarvestPrompt = false
+                        
+                        -- Match by ActionText keywords
+                        if actionText:find("harvest") or actionText:find("panen") or actionText:find("pick") 
+                           or actionText:find("collect") or actionText:find("grab") or actionText:find("take") then
+                            isHarvestPrompt = true
+                        end
+                        
+                        -- Match by parent/ancestor attributes (Fallback)
+                        if not isHarvestPrompt and parent then
+                            if parent:GetAttribute("ReadyToHarvest") ~= nil or parent:GetAttribute("Progress") ~= nil then
+                                isHarvestPrompt = true
+                            elseif parent.Parent and (parent.Parent:GetAttribute("ReadyToHarvest") ~= nil or parent.Parent:GetAttribute("Progress") ~= nil) then
+                                isHarvestPrompt = true
                             end
-                        else
-                            -- Case 2: Plant itself is harvested (no Fruits folder)
-                            if isHarvestable(plant) then
-                                harvestObject(plant)
-                                task.wait(0.05)
+                        end
+                        
+                        if isHarvestPrompt then
+                            pcall(function()
+                                -- Instantly trigger the prompt by bypassing hold duration & distance validation
+                                desc.HoldDuration = 0
+                                desc.MaxActivationDistance = 999999
+                                if fireproximityprompt then
+                                    fireproximityprompt(desc)
+                                end
+                            end)
+                            task.wait(0.02)
+                        end
+                    end
+                end
+                
+                -- 2. Scan and trigger ClickDetectors recursively
+                for _, desc in ipairs(plot:GetDescendants()) do
+                    if desc:IsA("ClickDetector") then
+                        local parent = desc.Parent
+                        if parent and (parent:IsA("Model") or parent:IsA("BasePart")) then
+                            if not parent:IsDescendantOf(LocalPlayer.Character) then
+                                pcall(function()
+                                    if fireclickdetector then
+                                        fireclickdetector(desc)
+                                    end
+                                end)
+                                task.wait(0.02)
+                            end
+                        end
+                    end
+                end
+                
+                -- 3. Network bypass fallback (for any non-physical or async updates)
+                if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
+                    local physicalFolder = plot:FindFirstChild("Important") and plot.Important:FindFirstChild("Plants_Physical")
+                    if not physicalFolder then
+                        physicalFolder = plot:FindFirstChild("Plants_Physical", true) or plot:FindFirstChild("Plants", true)
+                    end
+                    local targetFolder = physicalFolder or plot
+                    
+                    for _, plant in ipairs(targetFolder:GetChildren()) do
+                        if plant:IsA("Model") or plant:IsA("BasePart") then
+                            local fruitsFolder = plant:FindFirstChild("Fruits")
+                            if fruitsFolder then
+                                for _, fruit in ipairs(fruitsFolder:GetChildren()) do
+                                    if fruit:GetAttribute("ReadyToHarvest") == true or fruit:GetAttribute("Progress") == 100 or plant:GetAttribute("ReadyToHarvest") == true or plant:GetAttribute("Progress") == 100 then
+                                        utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, fruit)
+                                    end
+                                end
+                            else
+                                if plant:GetAttribute("ReadyToHarvest") == true or plant:GetAttribute("Progress") == 100 then
+                                    utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, plant)
+                                end
                             end
                         end
                     end
                 end
             end
         end
-        task.wait(0.8)
+        task.wait(0.6)
     end
 end)
 
