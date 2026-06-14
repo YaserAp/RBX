@@ -784,7 +784,6 @@ end
 
 SpeedHubX.Fluent = Fluent
 print("[SpeedHubX] Fluent UI Wrapper successfully loaded.")
-return UIWrapper
 
 
 -- ----------------------------------------------------
