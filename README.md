@@ -26,8 +26,8 @@ loadstring(game:HttpGet("https://raw.githack.com/YaserAp/RBX/main/loader.lua?t="
 *   **Auto sell all (semua buah d inventory):** Menjual seluruh hasil panen secara otomatis ke NPC Merchant secara instan.
 
 ### 🛒 2. Toko Benih Tab
-*   **Pilih Benih:** Memilih jenis benih yang akan ditanam/dibeli (Tomato, Carrot, Berry, Pumpkin, Gold, Grape, Apple).
-*   **Auto Beli Benih:** Otomatis membeli benih terpilih ketika persediaan habis.
+*   **Auto Beli Benih (Global):** Sakelar utama untuk mengaktifkan pembelian otomatis secara massal.
+*   **Daftar Sakelar Benih:** Memilih secara bebas satu atau lebih benih sekaligus (multi-select) dari 27 jenis benih game menggunakan sakelar (toggle) individu.
 
 ### 🧪 3. Auto Spray Tab
 *   **Auto Spray (Mutasi):** Otomatis menyemprot tanaman yang menghasilkan mutasi langka.
