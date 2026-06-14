@@ -75,8 +75,8 @@ local function loadModule(path)
         end
         sourceCode = content
     else
-        -- Mode GitHub: Unduh file secara dinamis dari server raw GitHub (bypassing cache)
-        local url = string.format("https://raw.githubusercontent.com/%s/%s/%s/%s?t=%s", owner, repo, branch, path, tostring(tick()))
+        -- Mode GitHub: Unduh file secara dinamis dari raw.githack.com (caching 0%)
+        local url = string.format("https://raw.githack.com/%s/%s/%s/%s", owner, repo, branch, path)
         local successGet, content = pcall(function()
             return game:HttpGet(url)
         end)
