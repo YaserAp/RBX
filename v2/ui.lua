@@ -133,10 +133,8 @@ function ModernUI:CreateWindow(titleText)
     end
     
     CloseBtn.Activated:Connect(closeMenu)
-    CloseBtn.MouseButton1Click:Connect(closeMenu)
     
     Fab.Activated:Connect(toggleMenu)
-    Fab.MouseButton1Click:Connect(toggleMenu)
     
     -- Sistem Drag Kustom agar Klik Tidak Terkunci di Delta Android
     local dragging = false
@@ -253,7 +251,6 @@ function ModernUI:CreateWindow(titleText)
         end
         
         TabBtn.Activated:Connect(selectTab)
-        TabBtn.MouseButton1Click:Connect(selectTab)
         
         tab.TabBtn = TabBtn
         tab.ScrollContent = ScrollContent
@@ -311,10 +308,6 @@ function ModernUI:CreateWindow(titleText)
             end
             
             Switch.Activated:Connect(function()
-                toggle.Value = not toggle.Value
-                updateToggle(true)
-            end)
-            Switch.MouseButton1Click:Connect(function()
                 toggle.Value = not toggle.Value
                 updateToggle(true)
             end)
@@ -490,7 +483,6 @@ function ModernUI:CreateWindow(titleText)
             end
             
             OpenBtn.Activated:Connect(toggleDD)
-            OpenBtn.MouseButton1Click:Connect(toggleDD)
             
             for _, opt in ipairs(optionsList) do
                 local OptBtn = Instance.new("TextButton")
@@ -504,14 +496,6 @@ function ModernUI:CreateWindow(titleText)
                 utils.addCorner(OptBtn, 3)
                 
                 OptBtn.Activated:Connect(function()
-                    dd.Value = opt
-                    OpenBtn.Text = opt .. " ▼"
-                    toggleDD()
-                    if callback then
-                        pcall(callback, opt)
-                    end
-                end)
-                OptBtn.MouseButton1Click:Connect(function()
                     dd.Value = opt
                     OpenBtn.Text = opt .. " ▼"
                     toggleDD()
