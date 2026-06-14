@@ -27,7 +27,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/YaserAp/RBX/main/load
 
 ### 🛒 2. Toko Benih Tab
 *   **Auto Beli Benih (Global):** Sakelar utama untuk mengaktifkan pembelian otomatis secara massal.
-*   **Dropdown Pilihan Benih:** Memilih satu atau beberapa jenis benih sekaligus secara dinamis menggunakan menu dropdown pilihan ganda (multi-select) dari 25 jenis benih game (benih mutasi Gold & Rainbow telah dihapus karena ditangani secara terpisah).
+*   **Pilih Benih yang Ingin Dibeli:** Menu dropdown pilihan ganda (multi-select) untuk memilih satu atau beberapa jenis benih sekaligus secara dinamis dari 25 jenis benih game (benih mutasi Gold & Rainbow telah dihapus karena ditangani secara terpisah).
 
 ### 🧪 3. Auto Spray Tab
 *   **Auto Spray (Mutasi):** Otomatis menyemprot tanaman yang menghasilkan mutasi langka.
