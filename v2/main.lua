@@ -31,38 +31,49 @@ end)
 -- Tab 2: Toko Benih
 local ShopTab = Window:CreateTab("Toko Benih")
 
-local allSeeds = {
-    "Carrot", "Strawberry", "Blueberry", "Tulip", "Tomato", "Apple", "Pumpkin", "Bamboo", "Corn", "Cactus",
-    "Pineapple", "Mushroom", "Green Bean", "Banana", "Grape", "Coconut", "Mango", "Acorn", "Cherry",
-    "Dragon Fruit", "Sunflower", "Pomegranate", "Poison Apple", "Venus Fly Trap", "Moon Bloom", "Dragon's Breath",
-    "Ghost Pepper", "Glow Mushroom", "Poison Ivy", "Baby Cactus", "Horned Melon", "Gold", "Rainbow", "Lotus",
-    "Romanesco", "Thorn Rose", "Buttercup", "Beanstalk"
-}
-
-local SelectedSeedsPara = ShopTab:AddParagraph("Benih Terpilih (Auto Buy & Plant)", "")
-
-local function updateSelectedSeedsText()
-    local text = table.concat(config.SelectedSeeds, ", ")
-    if text == "" then
-        text = "(Tidak ada benih terpilih - Auto Buy & Plant dinonaktifkan)"
-    end
-    SelectedSeedsPara:SetText(text)
-end
-updateSelectedSeedsText()
-
-ShopTab:AddDropdown("Pilih Benih (Klik untuk Tambah/Hapus)", allSeeds, "Tomato", function(v)
-    local index = table.find(config.SelectedSeeds, v)
-    if index then
-        table.remove(config.SelectedSeeds, index)
-    else
-        table.insert(config.SelectedSeeds, v)
-    end
-    updateSelectedSeedsText()
-end)
-
-ShopTab:AddToggle("Auto Beli Benih", config.AutoBuySeeds, function(v)
+ShopTab:AddToggle("Auto Beli Benih (Global)", config.AutoBuySeeds, function(v)
     config.AutoBuySeeds = v
 end)
+
+ShopTab:AddParagraph("Pilih Benih yang Ingin Dibeli & Ditanam", "Silakan nyalakan/matikan saklar benih di bawah ini.")
+
+local seedsList = {
+    {"Carrot", "Carrot (Wortel) - Common"},
+    {"Strawberry", "Strawberry (Stroberi) - Common"},
+    {"Blueberry", "Blueberry (Bluberi) - Common"},
+    {"Tomato", "Tomato (Tomat) - Uncommon"},
+    {"Apple", "Apple (Apel) - Uncommon"},
+    {"Tulip", "Tulip - Uncommon"},
+    {"Corn", "Corn (Jagung) - Rare"},
+    {"Cactus", "Cactus (Kaktus) - Rare"},
+    {"Pineapple", "Pineapple (Nanas) - Rare"},
+    {"Bamboo", "Bamboo (Bambu) - Rare"},
+    {"Mushroom", "Mushroom (Jamur) - Epic"},
+    {"Green Bean", "Green Bean (Buncis) - Epic"},
+    {"Banana", "Banana (Pisang) - Epic"},
+    {"Grape", "Grape (Anggur) - Epic"},
+    {"Coconut", "Coconut (Kelapa) - Epic"},
+    {"Mango", "Mango (Mangga) - Epic"},
+    {"Acorn", "Acorn (Kenari) - Legendary"},
+    {"Cherry", "Cherry (Ceri) - Legendary"},
+    {"Dragon Fruit", "Dragon Fruit (Buah Naga) - Legendary"},
+    {"Sunflower", "Sunflower (Bunga Matahari) - Legendary"},
+    {"Pomegranate", "Pomegranate (Delima) - Mythic"},
+    {"Poison Apple", "Poison Apple (Apel Beracun) - Mythic"},
+    {"Venus Fly Trap", "Venus Fly Trap - Mythic"},
+    {"Moon Bloom", "Moon Bloom - Super"},
+    {"Dragon's Breath", "Dragon's Breath - Super"},
+    {"Gold", "Gold (Emas) - Mutation"},
+    {"Rainbow", "Rainbow (Pelangi) - Mutation"}
+}
+
+for _, seedInfo in ipairs(seedsList) do
+    local seedKey = seedInfo[1]
+    local seedLabel = seedInfo[2]
+    ShopTab:AddToggle(seedLabel, config.SelectedSeeds[seedKey] or false, function(v)
+        config.SelectedSeeds[seedKey] = v
+    end)
+end
 
 -- Tab 3: Mutations (Spray)
 local MutationTab = Window:CreateTab("Auto Spray")
