@@ -1,0 +1,100 @@
+--[[
+    Speed Hub X - Utilities Module
+    Berisi fungsi-fungsi pembantu interaksi game dan dekorasi UI.
+--]]
+
+local SpeedHubX = shared.SpeedHubX or {}
+shared.SpeedHubX = SpeedHubX
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local Utils = {}
+SpeedHubX.Utils = Utils
+
+-- Fungsi Mencari Plot Kebun Pemain
+function Utils.getPlayerPlot()
+    local farmFolder = workspace:FindFirstChild("Farm") or workspace:FindFirstChild("Farms")
+    if farmFolder then
+        for _, plot in ipairs(farmFolder:GetChildren()) do
+            local important = plot:FindFirstChild("Important")
+            local data = important and important:FindFirstChild("Data")
+            local owner = data and data:FindFirstChild("Owner")
+            if owner and (owner.Value == LocalPlayer.Name or owner.Value == LocalPlayer) then
+                return plot
+            end
+        end
+    end
+    return nil
+end
+
+-- Fungsi Pemanggil Event Biner Game secara aman
+function Utils.fireNetworkEvent(eventTable, ...)
+    if not eventTable then return false end
+    local successCall = false
+    
+    pcall(function()
+        if type(eventTable) == "table" then
+            if eventTable.Fire then
+                eventTable:Fire(...)
+                successCall = true
+            elseif eventTable.FireServer then
+                eventTable:FireServer(...)
+                successCall = true
+            elseif eventTable.fire then
+                eventTable:fire(...)
+                successCall = true
+            else
+                local mt = getmetatable(eventTable)
+                if mt and mt.__call then
+                    eventTable(...)
+                    successCall = true
+                end
+            end
+        end
+    end)
+    
+    return successCall
+end
+
+-- Fungsi Fallback Interaksi Click/Prompt Fisik
+function Utils.triggerInteraction(object)
+    if not object then return false end
+    local prompt = object:FindFirstChildOfClass("ProximityPrompt")
+    if prompt and fireproximityprompt then
+        pcall(function() fireproximityprompt(prompt) end)
+        return true
+    end
+    local clickDetector = object:FindFirstChildOfClass("ClickDetector")
+    if clickDetector and fireclickdetector then
+        pcall(function() fireclickdetector(clickDetector) end)
+        return true
+    end
+    return false
+end
+
+-- Fungsi Pembuat UICorner
+function Utils.addCorner(parent, radius)
+    local success, corner = pcall(function()
+        local c = Instance.new("UICorner")
+        c.CornerRadius = UDim.new(0, radius)
+        c.Parent = parent
+        return c
+    end)
+    return success and corner or nil
+end
+
+-- Fungsi Pembuat UIStroke
+function Utils.addStroke(parent, color, thickness)
+    local success, str = pcall(function()
+        local s = Instance.new("UIStroke")
+        s.Color = color
+        s.Thickness = thickness
+        s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        s.Parent = parent
+        return s
+    end)
+    return success and str or nil
+end
+
+print("[SpeedHubX] Utilities module successfully loaded.")
