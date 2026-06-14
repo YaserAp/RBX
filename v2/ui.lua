@@ -541,7 +541,14 @@ function ModernUI:CreateWindow(titleText)
             Content.TextXAlignment = Enum.TextXAlignment.Left
             Content.TextYAlignment = Enum.TextYAlignment.Top
             Content.TextWrapped = true
-            Content.Parent = Card
+            local para = {}
+            function para:SetTitle(t)
+                Title.Text = t
+            end
+            function para:SetText(t)
+                Content.Text = t
+            end
+            return para
         end
 
         -- 5. ADD LOGVIEWER (KHUSUS TAB LOGS)

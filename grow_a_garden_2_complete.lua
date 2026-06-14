@@ -226,13 +226,19 @@ local initSuccess, initError = pcall(function()
                         if tile.Name == "Dirt" or tile.Name == "PlotTile" or tile.Name == "Tile" then
                             local isEmpty = tile:GetAttribute("Empty") == true or tile:GetAttribute("Occupied") == false or #tile:GetChildren() == 0
                             if isEmpty then
-                                local seedTool = LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed)
-                                    or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. " Seed")
-                                    or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. "Seed")
-                                if not seedTool and LocalPlayer.Character then
-                                    seedTool = LocalPlayer.Character:FindFirstChild(config.SelectedSeed)
-                                        or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. " Seed")
-                                        or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. "Seed")
+                                local seedTool = nil
+                                for _, seedName in ipairs(config.SelectedSeeds) do
+                                    seedTool = LocalPlayer.Backpack:FindFirstChild(seedName)
+                                        or LocalPlayer.Backpack:FindFirstChild(seedName .. " Seed")
+                                        or LocalPlayer.Backpack:FindFirstChild(seedName .. "Seed")
+                                    if not seedTool and LocalPlayer.Character then
+                                        seedTool = LocalPlayer.Character:FindFirstChild(seedName)
+                                            or LocalPlayer.Character:FindFirstChild(seedName .. " Seed")
+                                            or LocalPlayer.Character:FindFirstChild(seedName .. "Seed")
+                                    end
+                                    if seedTool then
+                                        break
+                                    end
                                 end
                                 
                                 if seedTool then
@@ -326,8 +332,11 @@ local initSuccess, initError = pcall(function()
     task.spawn(function()
         while true do
             if config.AutoBuySeeds then
-                if Networking and Networking.SeedShop and Networking.SeedShop.PurchaseSeed then
-                    fireNetworkEvent(Networking.SeedShop.PurchaseSeed, config.SelectedSeed, 1)
+                for _, seedName in ipairs(config.SelectedSeeds) do
+                    if Networking and Networking.SeedShop and Networking.SeedShop.PurchaseSeed then
+                        fireNetworkEvent(Networking.SeedShop.PurchaseSeed, seedName, 1)
+                    end
+                    task.wait(0.1) -- Jeda singkat antar pembelian benih
                 end
             end
             task.wait(1.5)
@@ -990,7 +999,14 @@ end)
                 Content.TextXAlignment = Enum.TextXAlignment.Left
                 Content.TextYAlignment = Enum.TextYAlignment.Top
                 Content.TextWrapped = true
-                Content.Parent = Card
+                local para = {}
+                function para:SetTitle(t)
+                    Title.Text = t
+                end
+                function para:SetText(t)
+                    Content.Text = t
+                end
+                return para
             end
     
             -- 5. ADD LOGVIEWER (KHUSUS TAB LOGS)
@@ -1070,9 +1086,36 @@ end)
     
     -- Tab 2: Toko Benih
     local ShopTab = Window:CreateTab("Toko Benih")
-    ShopTab:AddDropdown("Pilih Benih", {"Carrot", "Strawberry", "Blueberry", "Tomato", "Apple", "Grape", "Pumpkin", "Banana", "Dragon Fruit", "Moon Bloom", "Gold", "Rainbow"}, "Tomato", function(v)
-        config.SelectedSeed = v
+    
+    local allSeeds = {
+        "Carrot", "Strawberry", "Blueberry", "Tulip", "Tomato", "Apple", "Pumpkin", "Bamboo", "Corn", "Cactus",
+        "Pineapple", "Mushroom", "Green Bean", "Banana", "Grape", "Coconut", "Mango", "Acorn", "Cherry",
+        "Dragon Fruit", "Sunflower", "Pomegranate", "Poison Apple", "Venus Fly Trap", "Moon Bloom", "Dragon's Breath",
+        "Ghost Pepper", "Glow Mushroom", "Poison Ivy", "Baby Cactus", "Horned Melon", "Gold", "Rainbow", "Lotus",
+        "Romanesco", "Thorn Rose", "Buttercup", "Beanstalk"
+    }
+    
+    local SelectedSeedsPara = ShopTab:AddParagraph("Benih Terpilih (Auto Buy & Plant)", "")
+    
+    local function updateSelectedSeedsText()
+        local text = table.concat(config.SelectedSeeds, ", ")
+        if text == "" then
+            text = "(Tidak ada benih terpilih - Auto Buy & Plant dinonaktifkan)"
+        end
+        SelectedSeedsPara:SetText(text)
+    end
+    updateSelectedSeedsText()
+    
+    ShopTab:AddDropdown("Pilih Benih (Klik untuk Tambah/Hapus)", allSeeds, "Tomato", function(v)
+        local index = table.find(config.SelectedSeeds, v)
+        if index then
+            table.remove(config.SelectedSeeds, index)
+        else
+            table.insert(config.SelectedSeeds, v)
+        end
+        updateSelectedSeedsText()
     end)
+    
     ShopTab:AddToggle("Auto Beli Benih", false, function(v)
         config.AutoBuySeeds = v
     end)

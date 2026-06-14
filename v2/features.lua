@@ -53,13 +53,19 @@ task.spawn(function()
                     if tile.Name == "Dirt" or tile.Name == "PlotTile" or tile.Name == "Tile" then
                         local isEmpty = tile:GetAttribute("Empty") == true or tile:GetAttribute("Occupied") == false or #tile:GetChildren() == 0
                         if isEmpty then
-                            local seedTool = LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed)
-                                or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. " Seed")
-                                or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. "Seed")
-                            if not seedTool and LocalPlayer.Character then
-                                seedTool = LocalPlayer.Character:FindFirstChild(config.SelectedSeed)
-                                    or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. " Seed")
-                                    or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. "Seed")
+                            local seedTool = nil
+                            for _, seedName in ipairs(config.SelectedSeeds) do
+                                seedTool = LocalPlayer.Backpack:FindFirstChild(seedName)
+                                    or LocalPlayer.Backpack:FindFirstChild(seedName .. " Seed")
+                                    or LocalPlayer.Backpack:FindFirstChild(seedName .. "Seed")
+                                if not seedTool and LocalPlayer.Character then
+                                    seedTool = LocalPlayer.Character:FindFirstChild(seedName)
+                                        or LocalPlayer.Character:FindFirstChild(seedName .. " Seed")
+                                        or LocalPlayer.Character:FindFirstChild(seedName .. "Seed")
+                                end
+                                if seedTool then
+                                    break
+                                end
                             end
                             
                             if seedTool then
@@ -153,8 +159,11 @@ end)
 task.spawn(function()
     while true do
         if config.AutoBuySeeds then
-            if SpeedHubX.Networking and SpeedHubX.Networking.SeedShop and SpeedHubX.Networking.SeedShop.PurchaseSeed then
-                utils.fireNetworkEvent(SpeedHubX.Networking.SeedShop.PurchaseSeed, config.SelectedSeed, 1)
+            for _, seedName in ipairs(config.SelectedSeeds) do
+                if SpeedHubX.Networking and SpeedHubX.Networking.SeedShop and SpeedHubX.Networking.SeedShop.PurchaseSeed then
+                    utils.fireNetworkEvent(SpeedHubX.Networking.SeedShop.PurchaseSeed, seedName, 1)
+                end
+                task.wait(0.1) -- Jeda singkat antar pembelian benih
             end
         end
         task.wait(1.5)
