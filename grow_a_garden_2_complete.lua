@@ -542,21 +542,23 @@ shared.SpeedHubX = SpeedHubX
 print("[SpeedHubX] Loading Fluent UI library from GitHub...")
 
 local Fluent = nil
-local success, err = pcall(function()
+local success, result = pcall(function()
     return loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 end)
 
-if success and Fluent then
+if success and type(result) == "table" then
+    Fluent = result
     print("[SpeedHubX] Fluent UI loaded successfully!")
 else
-    warn("[SpeedHubX] Failed to load Fluent UI, trying fallback master branch...")
-    local success2, err2 = pcall(function()
+    warn("[SpeedHubX] Failed to load Fluent UI from release, trying fallback...")
+    local success2, result2 = pcall(function()
         return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/main.lua"))()
     end)
-    if success2 and Fluent then
-        print("[SpeedHubX] Fluent UI loaded from master branch.")
+    if success2 and type(result2) == "table" then
+        Fluent = result2
+        print("[SpeedHubX] Fluent UI loaded from fallback.")
     else
-        error("[SpeedHubX] Critical Error: Fluent UI could not be loaded! " .. tostring(err or err2))
+        error("[SpeedHubX] Critical Error: Fluent UI could not be loaded! " .. tostring(result or result2))
     end
 end
 
