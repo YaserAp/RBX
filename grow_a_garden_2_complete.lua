@@ -377,16 +377,15 @@ task.spawn(function()
 
     -- Helper function to harvest an object (fruit or plant model)
     local function harvestObject(object)
-        local fired = false
+        -- Prioritize physical interaction (ProximityPrompt/ClickDetector) first,
+        -- since it is 100% reliable and mimics real user input.
+        local fired = utils.triggerInteraction(object)
         
-        -- Try bypass using networking module with correct object (fruit/plant model)
-        if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
-            fired = utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, object)
-        end
-        
-        -- If bypass failed, trigger interaction directly (ProximityPrompt/ClickDetector)
+        -- If physical interaction is not available/failed, fallback to network event bypass
         if not fired then
-            utils.triggerInteraction(object)
+            if SpeedHubX.Networking and SpeedHubX.Networking.Garden and SpeedHubX.Networking.Garden.CollectFruit then
+                utils.fireNetworkEvent(SpeedHubX.Networking.Garden.CollectFruit, object)
+            end
         end
     end
 
@@ -395,6 +394,9 @@ task.spawn(function()
             local plot = utils.getPlayerPlot()
             if plot then
                 local physicalFolder = plot:FindFirstChild("Important") and plot.Important:FindFirstChild("Plants_Physical")
+                if not physicalFolder then
+                    physicalFolder = plot:FindFirstChild("Plants_Physical", true) or plot:FindFirstChild("Plants", true)
+                end
                 local targetFolder = physicalFolder or plot
                 
                 for _, plant in ipairs(targetFolder:GetChildren()) do
