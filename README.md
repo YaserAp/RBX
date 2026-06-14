@@ -23,7 +23,7 @@ loadstring(game:HttpGet("https://raw.githack.com/YaserAp/RBX/main/loader.lua?t="
 *   **Auto Plant (Tanam):** Menanam benih yang dipilih secara otomatis pada plot kosong.
 *   **Auto Harvest (Panen):** Memanen buah matang secara instan menggunakan bypass jaringan internal.
 *   **Auto Water (Siram):** Menyiram tanah secara otomatis ketika kelembapan berada di bawah 80%.
-*   **Auto Sell (Jual):** Menjual seluruh hasil panen secara otomatis ke NPC Merchant secara instan.
+*   **Auto sell all (semua buah d inventory):** Menjual seluruh hasil panen secara otomatis ke NPC Merchant secara instan.
 
 ### 🛒 2. Toko Benih Tab
 *   **Pilih Benih:** Memilih jenis benih yang akan ditanam/dibeli (Tomato, Carrot, Berry, Pumpkin, Gold, Grape, Apple).

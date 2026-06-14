@@ -1060,7 +1060,7 @@ end)
     FarmTab:AddToggle("Auto Water (Siram)", false, function(v)
         config.AutoWater = v
     end)
-    FarmTab:AddToggle("Auto Sell (Jual otomatis)", false, function(v)
+    FarmTab:AddToggle("Auto sell all (semua buah d inventory)", false, function(v)
         config.AutoSell = v
     end)
     
