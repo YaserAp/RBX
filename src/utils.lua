@@ -32,22 +32,25 @@ end
 function Utils.fireNetworkEvent(eventTable, ...)
     if not eventTable then return false end
     local successCall = false
+    local args = {...}
+    local argCount = select("#", ...)
+    local unpackFunc = unpack or table.unpack
     
     pcall(function()
         if type(eventTable) == "table" then
             if eventTable.Fire then
-                eventTable:Fire(...)
+                eventTable:Fire(unpackFunc(args, 1, argCount))
                 successCall = true
             elseif eventTable.FireServer then
-                eventTable:FireServer(...)
+                eventTable:FireServer(unpackFunc(args, 1, argCount))
                 successCall = true
             elseif eventTable.fire then
-                eventTable:fire(...)
+                eventTable:fire(unpackFunc(args, 1, argCount))
                 successCall = true
             else
                 local mt = getmetatable(eventTable)
                 if mt and mt.__call then
-                    eventTable(...)
+                    eventTable(unpackFunc(args, 1, argCount))
                     successCall = true
                 end
             end
