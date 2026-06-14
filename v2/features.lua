@@ -54,8 +54,12 @@ task.spawn(function()
                         local isEmpty = tile:GetAttribute("Empty") == true or tile:GetAttribute("Occupied") == false or #tile:GetChildren() == 0
                         if isEmpty then
                             local seedTool = LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed)
+                                or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. " Seed")
+                                or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. "Seed")
                             if not seedTool and LocalPlayer.Character then
                                 seedTool = LocalPlayer.Character:FindFirstChild(config.SelectedSeed)
+                                    or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. " Seed")
+                                    or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. "Seed")
                             end
                             
                             if seedTool then
@@ -64,7 +68,7 @@ task.spawn(function()
                                 
                                 local fired = false
                                 if SpeedHubX.Networking and SpeedHubX.Networking.Plant and SpeedHubX.Networking.Plant.PlantSeed then
-                                    fired = utils.fireNetworkEvent(SpeedHubX.Networking.Plant.PlantSeed, tile, config.SelectedSeed)
+                                    fired = utils.fireNetworkEvent(SpeedHubX.Networking.Plant.PlantSeed, tile, seedTool.Name)
                                 end
                                 
                                 if not fired then

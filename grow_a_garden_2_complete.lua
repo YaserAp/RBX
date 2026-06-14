@@ -117,7 +117,7 @@ local initSuccess, initError = pcall(function()
         AutoSell = false,
         AutoBuySeeds = false,
         AutoSpray = false,
-        SelectedSeed = "TomatoSeed",
+        SelectedSeed = "Tomato",
         WalkSpeed = 16,
         JumpPower = 50,
         InfiniteJump = false,
@@ -227,8 +227,12 @@ local initSuccess, initError = pcall(function()
                             local isEmpty = tile:GetAttribute("Empty") == true or tile:GetAttribute("Occupied") == false or #tile:GetChildren() == 0
                             if isEmpty then
                                 local seedTool = LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed)
+                                    or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. " Seed")
+                                    or LocalPlayer.Backpack:FindFirstChild(config.SelectedSeed .. "Seed")
                                 if not seedTool and LocalPlayer.Character then
                                     seedTool = LocalPlayer.Character:FindFirstChild(config.SelectedSeed)
+                                        or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. " Seed")
+                                        or LocalPlayer.Character:FindFirstChild(config.SelectedSeed .. "Seed")
                                 end
                                 
                                 if seedTool then
@@ -237,7 +241,7 @@ local initSuccess, initError = pcall(function()
                                     
                                     local fired = false
                                     if Networking and Networking.Plant and Networking.Plant.PlantSeed then
-                                        fired = fireNetworkEvent(Networking.Plant.PlantSeed, tile, config.SelectedSeed)
+                                        fired = fireNetworkEvent(Networking.Plant.PlantSeed, tile, seedTool.Name)
                                     end
                                     
                                     if not fired then
@@ -1066,7 +1070,7 @@ end)
     
     -- Tab 2: Toko Benih
     local ShopTab = Window:CreateTab("Toko Benih")
-    ShopTab:AddDropdown("Pilih Benih", {"TomatoSeed", "CarrotSeed", "BerrySeed", "PumpkinSeed", "GoldSeed", "GrapeSeed", "AppleSeed"}, "TomatoSeed", function(v)
+    ShopTab:AddDropdown("Pilih Benih", {"Carrot", "Strawberry", "Blueberry", "Tomato", "Apple", "Grape", "Pumpkin", "Banana", "Dragon Fruit", "Moon Bloom", "Gold", "Rainbow"}, "Tomato", function(v)
         config.SelectedSeed = v
     end)
     ShopTab:AddToggle("Auto Beli Benih", false, function(v)

@@ -30,7 +30,7 @@ end)
 
 -- Tab 2: Toko Benih
 local ShopTab = Window:CreateTab("Toko Benih")
-ShopTab:AddDropdown("Pilih Benih", {"TomatoSeed", "CarrotSeed", "BerrySeed", "PumpkinSeed", "GoldSeed", "GrapeSeed", "AppleSeed"}, config.SelectedSeed, function(v)
+ShopTab:AddDropdown("Pilih Benih", {"Carrot", "Strawberry", "Blueberry", "Tomato", "Apple", "Grape", "Pumpkin", "Banana", "Dragon Fruit", "Moon Bloom", "Gold", "Rainbow"}, config.SelectedSeed, function(v)
     config.SelectedSeed = v
 end)
 ShopTab:AddToggle("Auto Beli Benih", config.AutoBuySeeds, function(v)
