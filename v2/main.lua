@@ -50,7 +50,7 @@ for seedName, isSelected in pairs(config.SelectedSeeds) do
     end
 end
 
-ShopTab:AddDropdown("Pilih Benih yang Ingin Dibeli & Ditanam", seedNames, defaultSelected, function(val)
+ShopTab:AddDropdown("Pilih Benih yang Ingin Dibeli", seedNames, defaultSelected, function(val)
     -- Reset all config seeds to false
     for _, seedName in ipairs(seedNames) do
         config.SelectedSeeds[seedName] = false
