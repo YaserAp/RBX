@@ -95,12 +95,12 @@ function UIWrapper:CreateWindow(titleText)
             return ParaWrapper
         end
 
-        function TabWrapper:AddDropdown(labelText, valuesList, defaultValue, callback)
+        function TabWrapper:AddDropdown(labelText, valuesList, defaultValue, callback, multi)
             local dropdownId = "Dropdown_" .. labelText:gsub("%s+", ""):gsub("%W+", "")
             local Dropdown = Tab:AddDropdown(dropdownId, {
                 Title = labelText,
                 Values = valuesList or {},
-                Multi = false,
+                Multi = not not multi,
                 Default = defaultValue
             })
             Dropdown:OnChanged(function(val)

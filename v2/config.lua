@@ -38,9 +38,7 @@ SpeedHubX.Config = {
         ["Poison Apple"] = false,
         ["Venus Fly Trap"] = false,
         ["Moon Bloom"] = false,
-        ["Dragon's Breath"] = false,
-        ["Gold"] = false,
-        ["Rainbow"] = false
+        ["Dragon's Breath"] = false
     },
     WalkSpeed = 16,
     JumpPower = 50,

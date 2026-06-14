@@ -35,45 +35,33 @@ ShopTab:AddToggle("Auto Beli Benih (Global)", config.AutoBuySeeds, function(v)
     config.AutoBuySeeds = v
 end)
 
-ShopTab:AddParagraph("Pilih Benih yang Ingin Dibeli & Ditanam", "Silakan nyalakan/matikan saklar benih di bawah ini.")
-
-local seedsList = {
-    {"Carrot", "Carrot (Wortel) - Common"},
-    {"Strawberry", "Strawberry (Stroberi) - Common"},
-    {"Blueberry", "Blueberry (Bluberi) - Common"},
-    {"Tomato", "Tomato (Tomat) - Uncommon"},
-    {"Apple", "Apple (Apel) - Uncommon"},
-    {"Tulip", "Tulip - Uncommon"},
-    {"Corn", "Corn (Jagung) - Rare"},
-    {"Cactus", "Cactus (Kaktus) - Rare"},
-    {"Pineapple", "Pineapple (Nanas) - Rare"},
-    {"Bamboo", "Bamboo (Bambu) - Rare"},
-    {"Mushroom", "Mushroom (Jamur) - Epic"},
-    {"Green Bean", "Green Bean (Buncis) - Epic"},
-    {"Banana", "Banana (Pisang) - Epic"},
-    {"Grape", "Grape (Anggur) - Epic"},
-    {"Coconut", "Coconut (Kelapa) - Epic"},
-    {"Mango", "Mango (Mangga) - Epic"},
-    {"Acorn", "Acorn (Kenari) - Legendary"},
-    {"Cherry", "Cherry (Ceri) - Legendary"},
-    {"Dragon Fruit", "Dragon Fruit (Buah Naga) - Legendary"},
-    {"Sunflower", "Sunflower (Bunga Matahari) - Legendary"},
-    {"Pomegranate", "Pomegranate (Delima) - Mythic"},
-    {"Poison Apple", "Poison Apple (Apel Beracun) - Mythic"},
-    {"Venus Fly Trap", "Venus Fly Trap - Mythic"},
-    {"Moon Bloom", "Moon Bloom - Super"},
-    {"Dragon's Breath", "Dragon's Breath - Super"},
-    {"Gold", "Gold (Emas) - Mutation"},
-    {"Rainbow", "Rainbow (Pelangi) - Mutation"}
+local seedNames = {
+    "Carrot", "Strawberry", "Blueberry", "Tomato", "Apple", "Tulip", "Corn", "Cactus",
+    "Pineapple", "Bamboo", "Mushroom", "Green Bean", "Banana", "Grape", "Coconut",
+    "Mango", "Acorn", "Cherry", "Dragon Fruit", "Sunflower", "Pomegranate",
+    "Poison Apple", "Venus Fly Trap", "Moon Bloom", "Dragon's Breath"
 }
 
-for _, seedInfo in ipairs(seedsList) do
-    local seedKey = seedInfo[1]
-    local seedLabel = seedInfo[2]
-    ShopTab:AddToggle(seedLabel, config.SelectedSeeds[seedKey] or false, function(v)
-        config.SelectedSeeds[seedKey] = v
-    end)
+-- Build standard list of default selected seed strings based on config.SelectedSeeds
+local defaultSelected = {}
+for seedName, isSelected in pairs(config.SelectedSeeds) do
+    if isSelected and table.find(seedNames, seedName) then
+        table.insert(defaultSelected, seedName)
+    end
 end
+
+ShopTab:AddDropdown("Pilih Benih yang Ingin Dibeli & Ditanam", seedNames, defaultSelected, function(val)
+    -- Reset all config seeds to false
+    for _, seedName in ipairs(seedNames) do
+        config.SelectedSeeds[seedName] = false
+    end
+    -- Set selected ones to true. val is a dictionary: {[seedName] = true/false}
+    for seedName, isSelected in pairs(val) do
+        if type(seedName) == "string" and isSelected == true then
+            config.SelectedSeeds[seedName] = true
+        end
+    end
+end, true) -- Pass true for multi-select dropdown
 
 -- Tab 3: Mutations (Spray)
 local MutationTab = Window:CreateTab("Auto Spray")
